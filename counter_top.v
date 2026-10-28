@@ -1,13 +1,13 @@
 `timescale 1ns / 1ps
 
-// Basys 3 - Up/Down Counter on the 4-digit 7-segment display
-//   btnU (Up)     : +1
-//   btnD (Down)   : -1
-//   btnC (Center) : reset to 0000
-// Counts 0000..9999 in decimal and wraps around in both directions.
+// basys 3 - up/down counter on the 4-digit 7-segment display
+//   btnU (up)     : +1
+//   btnD (down)   : -1
+//   btnC (center) : reset to 0000
+// counts 0000..9999 in decimal and wraps around in both directions
 
 module counter_top (
-    input  wire       clk,     // 100 MHz on-board clock
+    input  wire       clk,     // 100 mhz on-board clock
     input  wire       btnU,    // +1
     input  wire       btnD,    // -1
     input  wire       btnC,    // reset
@@ -16,7 +16,7 @@ module counter_top (
     output reg  [3:0] an       // digit anode - active low (an[0] = rightmost)
 );
 
-    // Button debouncing + single-pulse generation
+    // button debouncing + single-pulse generation
 
     wire up_pulse, down_pulse, rst_level;
 
@@ -24,7 +24,7 @@ module counter_top (
     debounce db_down (.clk(clk), .btn_in(btnD), .level(),          .pulse(down_pulse));
     debounce db_rst  (.clk(clk), .btn_in(btnC), .level(rst_level), .pulse());
 
-    // 4-digit BCD up/down counter (d3 = thousands .. d0 = ones)
+    // 4-digit bcd up/down counter (d3 = thousands .. d0 = ones)
     
     reg [3:0] d0 = 0, d1 = 0, d2 = 0, d3 = 0;
 
@@ -58,7 +58,7 @@ module counter_top (
         end
     end
 
-    // Display multiplexing
+    // display multiplexing
     
     reg  [19:0] refresh = 0;
     wire [1:0]  digit_sel = refresh[19:18];
@@ -76,7 +76,7 @@ module counter_top (
         endcase
     end
 
-    // BCD to 7-segment decoder (active low, seg = {g,f,e,d,c,b,a})
+    // bcd to 7-segment decoder (active low, seg = {g,f,e,d,c,b,a})
     
     always @(*) begin
         case (digit_val)
@@ -98,8 +98,8 @@ module counter_top (
 
 endmodule
 
-// Debouncer: synchronizes the button, waits ~10 ms of stable input,
-// then outputs a clean level and a one-clock pulse on the rising edge.
+// debouncer: synchronizes the button, waits ~10 ms of stable input
+// then outputs a clean level and a one-clock pulse on the rising edge
 
 module debounce (
     input  wire clk,
